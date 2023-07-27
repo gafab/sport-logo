@@ -17,9 +17,6 @@ router.get('/download/:tid', (req, res) => {
   const tid = req.params.tid;
   const fileUrl = 'https://sportteamslogo.com/api?key=64f10b2f920f42b6ae1270b302cf2817&size=big&tid=' + tid;
 
-  // Extract the filename from the URL
-  const fileName = tid+'.png';
-
   // Download the file from the URL
   const protocol = fileUrl.startsWith('https') ? https : http;
   protocol.get(fileUrl, (response) => {
@@ -27,31 +24,14 @@ router.get('/download/:tid', (req, res) => {
       return res.status(404).send('File not found.');
     }
 
-    // Save the file to the server
-    const fileStream = fs.createWriteStream(fileName);
-    response.pipe(fileStream);
+    // Set the appropriate content type for the response
+    res.setHeader('Content-Type', response.headers['content-type']);
 
-    // Handle events when the file is fully written
-    fileStream.on('finish', () => {
-      fileStream.close(() => {
-        // Serve the downloaded file for download
-        res.download(fileName, (err) => {
-          if (err) {
-            res.status(500).send('Error while downloading the file.');
-          }
-
-          // Remove the file after download is completed
-          fs.unlink(fileName, (err) => {
-            if (err) {
-              console.error('Error deleting the downloaded file:', err);
-            }
-          });
-        });
-      });
-    });
+    // Pipe the file download stream directly to the response
+    response.pipe(res);
 
     // Handle errors during file download
-    fileStream.on('error', (err) => {
+    response.on('error', (err) => {
       console.error('Error downloading the file:', err);
       res.status(500).send('Error while downloading the file.');
     });
