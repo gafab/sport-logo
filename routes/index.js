@@ -17,7 +17,7 @@ router.get('/view/:tid', function (req, res, next) {
   const fileUrl = 'https://sportteamslogo.com/api?key=64f10b2f920f42b6ae1270b302cf2817&size=big&tid=' + tid;
 
   res.render('image', {
-    src: 'fileUrl'
+    src: fileUrl
   });
 });
 
