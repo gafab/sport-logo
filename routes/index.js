@@ -15,7 +15,7 @@ router.get('/download/:tid', (req, res) => {
   const fileUrl = 'https://sportteamslogo.com/api?key=64f10b2f920f42b6ae1270b302cf2817&size=big&tid=' + tid;
 
   // Extract the filename from the URL
-  const fileName = path.basename(fileUrl);
+  const fileName = tid+'.png';
 
   // Download the file from the URL
   const protocol = fileUrl.startsWith('https') ? https : http;
