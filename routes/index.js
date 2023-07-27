@@ -12,6 +12,14 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.get('/view/:tid', function (req, res, next) {
+  const tid = req.params.tid;
+  const fileUrl = 'https://sportteamslogo.com/api?key=64f10b2f920f42b6ae1270b302cf2817&size=big&tid=' + tid;
+
+  res.render('image', {
+    src: 'fileUrl'
+  });
+});
 
 router.get('/download/:tid', (req, res) => {
   const tid = req.params.tid;
@@ -25,7 +33,7 @@ router.get('/download/:tid', (req, res) => {
     }
 
     // Set the appropriate content type for the response
-    res.setHeader('Content-Type', response.headers['content-type']);
+    res.setHeader('Content-Type', 'image/png');
 
     // Pipe the file download stream directly to the response
     response.pipe(res);
